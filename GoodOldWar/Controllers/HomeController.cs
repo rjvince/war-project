@@ -19,7 +19,7 @@ namespace GoodOldWar.Controllers
         }
 
         [HttpPost("/game")]
-        public GameStateDTO Game(string player1name, string player2name)
+        public GameStateDTO Game(string player1name, string player2name = "CPU")
         {
             return _service.CreateNewGame(player1name, player2name);           
         }      
