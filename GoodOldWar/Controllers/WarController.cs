@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GoodOldWar.Controllers
 {
-    public class HomeController : Controller
+    public class WarController : Controller
     {
         private readonly WarGameService _service;
 
-        public HomeController(WarGameService srv)
+        public WarController(WarGameService srv)
         {
             _service = srv;
         }
