@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
+using Microsoft.EntityFrameworkCore;
 namespace GoodOldWar
 {
     public class Startup
@@ -30,6 +30,11 @@ namespace GoodOldWar
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            
+            WarGameContext wgcontext = new WarGameContext();
+            services.AddDbContext<WarGameContext>(opt => opt.UseSqlite("Data Source=wargame.db"));
+            wgcontext.Database.EnsureCreated();
+            services.AddScoped<WarGameService, WarGameService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
