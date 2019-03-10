@@ -120,6 +120,8 @@ namespace GoodOldWar
                 {
                     plays.Add($"{ (game.players[0].Deck.IsEmpty() ? game.players[1].Name : game.players[0].Name) } wins!");
                 }
+
+                _context.Games.Remove(game);
             }
 
             _context.SaveChanges();

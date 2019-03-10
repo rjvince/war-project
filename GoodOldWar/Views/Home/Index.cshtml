@@ -70,6 +70,10 @@
 
                         $newContent.find('#deal-form').attr('action', responseObject['link']);
 
+                        if (responseObject['gameOver'] == true) {
+                            $newContent.find('#deal-form').remove();
+                        }
+
                         $('#content-area').empty();
                         $('#content-area').append($newContent);
                     });            
