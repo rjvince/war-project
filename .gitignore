@@ -6,6 +6,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+wargame.db
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
