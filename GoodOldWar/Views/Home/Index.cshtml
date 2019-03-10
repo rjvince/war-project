@@ -1,5 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+
+    var gameList = ViewData["GameList"] as List<Game>;
 }
 
     <div id="content-area">
@@ -18,6 +20,8 @@
                     </form>
                 </div>
             </div>
+            @if (gameList.Count() > 0)
+            {
             <div class="container">
                 <div class="row">
                     <div class="col-md-6 col-lg-offset-3">
@@ -28,7 +32,7 @@
                         <div class="row">
                             <form class="form-return" method="get" action="game/reload" data-ajax="true" data-ajax-method="get" data-ajax-complete="driveGame">
                                 <select class="form-control" name="id">
-                                    @foreach (var game in ViewData["GameList"] as List<Game>)
+                                    @foreach (var game in gameList)
                                     {
                                         <option value="@game.Id">
                                             @game.players[0].Name vs. @game.players[1].Name
@@ -36,12 +40,13 @@
                                     }
                                 </select>
                                 <button class="btn btn-lg btn-success" type="submit">Let's Go! <span class="glyphicon glyphicon-log-in"></span></button>
-                            </form>                            
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
-</div>
+            }
+        </div>
 
 @section scripts{    
     <script>

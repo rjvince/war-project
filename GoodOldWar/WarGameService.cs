@@ -131,6 +131,8 @@ namespace GoodOldWar
                 deck1.RefreshSequence();
                 deck2.RefreshSequence();
                 plays.Add($"{player1.Name} won {prize.Count()} cards");
+                _context.WinLogs.Add(new WinLog(player1.Name, prize.Count()));
+                _context.WinLogs.Add(new WinLog(player2.Name, -1 * prize.Count()));
                 return HandResult.Player1Win;
             }
             else if (comparison < 0)
@@ -140,13 +142,17 @@ namespace GoodOldWar
                 deck1.RefreshSequence();
                 deck2.RefreshSequence();
                 plays.Add($"{player2.Name} won {prize.Count()} cards");
+                _context.WinLogs.Add(new WinLog(player2.Name, prize.Count()));
+                _context.WinLogs.Add(new WinLog(player1.Name, -1 * prize.Count()));
                 return HandResult.Player2Win;
             }
             else
             {
                 //War! Two unseen cards are dealt into the prize pool
-                prize.Add(deck1.DealTopCard());
-                prize.Add(deck1.DealTopCard());
+                PlayingCard warCard1 = deck1.DealTopCard();
+                PlayingCard warCard2 = deck2.DealTopCard();
+                prize.Add(warCard1);
+                prize.Add(warCard2);
                 plays.Add($"-- WAR!");
                 return HandResult.War;
             }

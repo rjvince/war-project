@@ -16,6 +16,7 @@ namespace GoodOldWar
         public DbSet<Player> Players { get; set; }
         public DbSet<Deck> Decks { get; set; }
         public DbSet<PlayingCard> PlayingCards { get; set; }
+        public DbSet<WinLog> WinLogs { get; set; }
 
         public Game GetGameEntireState(int gameId)
         {
