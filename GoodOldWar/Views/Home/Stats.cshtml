@@ -1,0 +1,16 @@
+﻿@{
+    var statList = ViewData["StatList"] as List<PlayerMetricsDTO>;
+}
+    <h2>Player Stats</h2>
+    <h3>Difference of Cards Won and Lost</h3>
+    <div class="container">
+        <ul class="list-group col-md-6">
+            @foreach (var metrics in statList)
+            {
+                <li class="list-group-item">
+                    @metrics.Name
+                    <span class="badge">@metrics.WinLossDifference</span>
+                </li>
+            }
+        </ul>
+    </div>

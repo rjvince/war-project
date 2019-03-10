@@ -69,6 +69,12 @@ namespace GoodOldWar.Controllers
             return View();
         }
 
+        public IActionResult Stats()
+        {
+            ViewData["StatList"] = _service.GetStats();
+            return View();
+        }
+
         public IActionResult About()
         {
             ViewData["Message"] = "War for two players";

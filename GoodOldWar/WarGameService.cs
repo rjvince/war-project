@@ -16,6 +16,32 @@ namespace GoodOldWar
             _context = ctx;
         }
 
+        public List<PlayerMetricsDTO> GetStats()
+        {
+            List<PlayerMetricsDTO> dtos = new List<PlayerMetricsDTO>();
+
+            DbSet<WinLog> winLogs = _context.WinLogs;
+
+            var query = from winLog in winLogs
+                        group winLog by winLog.PlayerName into g
+                        select new
+                        {
+                            PlayerName = g.Key,
+                            Difference = g.Sum(wl => wl.CardsWon)
+                        };
+
+            query.OrderByDescending(sg => sg.Difference);
+
+            foreach(var statGroup in query)
+            {
+                dtos.Add(new PlayerMetricsDTO() {
+                    Name = statGroup.PlayerName,
+                    WinLossDifference = statGroup.Difference });
+            }
+
+            return dtos;
+        }
+
         public GameStateDTO CreateNewGame(string player1name, string player2name)
         {
             Game game = new Game();
