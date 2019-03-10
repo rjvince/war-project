@@ -22,7 +22,7 @@ namespace GoodOldWar.Controllers
         public GameStateDTO Game(string player1name, string player2name = "CPU")
         {
             GameStateDTO game =_service.CreateNewGame(player1name, player2name);
-            game.Link = $"{Request.Path.Value}/{game.GameId}";
+            game.Link = $"{Request.Path.Value}/{game.GameId}/next";
             
             return game;
         }      
@@ -39,7 +39,13 @@ namespace GoodOldWar.Controllers
         [HttpGet("/game/{id}/next")]
         public GameStateDTO PlayNext(int id)
         {
-            return _service.PlayNextHand(id);
+            GameStateDTO game = _service.PlayNextHand(id);
+            if (!game.GameOver)
+            {
+                game.Link = $"{Request.Path.Value}";
+            }
+
+            return game;
         }
         
         public IActionResult Index()

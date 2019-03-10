@@ -2,25 +2,52 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="jumbotron">
-    <div class="container">
-        <h1>WAR!</h1>
-        <p>The classic card game of patience and fate &mdash; who will win at <strong>War</strong>?</p>
-    </div>
-    <div class="container">
-        <form class="form-player" method="post" action="/game" data-ajax="true" data-ajax-method="post" data-ajax-complete="startGame">
-            <h2 class="form-player-heading">Player 1:</h2>
-            <label for="player1name" class="sr-only">Player Name</label>
-            <input type="text" name="player1name" class="form-control" placeholder="Name" required autofocus />
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Enter &raquo;</button>
-        </form>
-    </div>
+    <div id="content-area">
+        <div id="login-area">
+            <div class="jumbotron">
+                <div class="container">
+                    <h1>WAR!</h1>
+                    <p>The classic card game of patience and fate &mdash; who will win at <strong>War</strong>?</p>
+                </div>
+                <div class="container">
+                    <form class="form-player" method="post" action="/game" data-ajax="true" data-ajax-method="post" data-ajax-complete="driveGame">
+                        <h2 class="form-player-heading">Player 1:</h2>
+                        <label for="player1name" class="sr-only">Player Name</label>
+                        <input type="text" name="player1name" class="form-control" placeholder="Name" required autofocus />
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Enter &raquo;</button>
+                    </form>
+                </div>
+            </div>
+        </div>
 </div>
 
 @section scripts{    
     <script>
-        startGame = (xHr) => {
-            console.log(xHr);
-    };
+        driveGame = (xHr) => {
+            var responseObject = $.parseJSON(xHr.responseText);
+            console.log(responseObject);
+            var $newContent = $("<div></div>")
+                .load("/gamePanelSnippet.html .game-panel-container",
+                    () => {
+                        $newContent.find('.player1-name').text(responseObject['player1']['name']);
+                        $newContent.find('.player2-name').text(responseObject['player2']['name']);
+
+                        $newContent.find('.player1-score').text(responseObject['player1']['deck']['cards'].length);
+                        $newContent.find('.player2-score').text(responseObject['player2']['deck']['cards'].length);
+
+                        var messages = responseObject['lastPlay'];
+                        for (x in messages) {
+                            console.log(messages[x]);
+                            var $messageItem = $("<li></li>");
+                            $messageItem.text(messages[x]);
+                            $newContent.find('#game-panel-messages').append($messageItem);
+                        }
+
+                        $newContent.find('#deal-form').attr('action', responseObject['link']);
+
+                        $('#content-area').empty();
+                        $('#content-area').append($newContent);
+                    });            
+        };
     </script>
 }

@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Game Panel Template</title>
+    <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="lib/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container game-panel-container">
+        <div class="panel panel-primary">
+            <div class="panel-heading"><span class="player1-name">--PLAYER 1--</span> vs. <span class="player2-name">--PLAYER 2--</span></div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6"><span class="player1-name">--PLAYER 1--</span>: <span class="player1-score">--SCORE--</span></div>
+                    <div class="col-md-6"><span class="player2-name">--PLAYER 2--</span>: <span class="player2-score">--SCORE--</span></div>
+                </div>
+                <div class="row">
+                    <ul id="game-panel-messages">
+                    </ul>
+                </div>
+                <form id="deal-form" method="get" data-ajax="true" data-ajax-method="get" data-ajax-complete="driveGame">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-offset-3">
+                            <button class="btn btn-lg btn-primary btn-block" type="submit" id="deal-button">Deal Next Hand <span class="glyphicon glyphicon-triangle-right"></span></button>
+                        </div>
+                    </div>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+
+</html>
