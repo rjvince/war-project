@@ -64,6 +64,11 @@ namespace GoodOldWar
             return dto;
         }
 
+        public List<Game> GetNRecentGames(int v)
+        {
+            return _context.Games.Include(g => g.players).OrderByDescending(g => g.Id).Take(5).ToList();
+        }
+
         public GameStateDTO PlayNextHand(int gameId)
         {
             Game game = _context.GetGameEntireState(gameId);
@@ -81,7 +86,14 @@ namespace GoodOldWar
             if(game.Over())
             {
                 plays.Add("Game Over");
-                plays.Add($"{ (game.players[0].Deck.IsEmpty() ? game.players[0].Name : game.players[1].Name) } is out of cards.");
+                if (game.players[0].Deck.IsEmpty() && game.players[1].Deck.IsEmpty())
+                {
+                    plays.Add("Both players are out of cards?! It's... a DRAW!");
+                }
+                else
+                {
+                    plays.Add($"{ (game.players[0].Deck.IsEmpty() ? game.players[1].Name : game.players[0].Name) } wins!");
+                }
             }
 
             _context.SaveChanges();

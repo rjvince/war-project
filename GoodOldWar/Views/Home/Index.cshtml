@@ -18,14 +18,35 @@
                     </form>
                 </div>
             </div>
-        </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 col-lg-offset-3">
+                        <div class="row">
+                            <h2>Back for more WAR?</h2>
+                            Rejoin an ongoing campaign!
+                        </div>
+                        <div class="row">
+                            <form class="form-return" method="get" action="game/reload" data-ajax="true" data-ajax-method="get" data-ajax-complete="driveGame">
+                                <select class="form-control" name="id">
+                                    @foreach (var game in ViewData["GameList"] as List<Game>)
+                                    {
+                                        <option value="@game.Id">
+                                            @game.players[0].Name vs. @game.players[1].Name
+                                        </option>
+                                    }
+                                </select>
+                                <button class="btn btn-lg btn-success" type="submit">Let's Go! <span class="glyphicon glyphicon-log-in"></span></button>
+                            </form>                            
+                        </div>
+                    </div>
+                </div>
+            </div>
 </div>
 
 @section scripts{    
     <script>
         driveGame = (xHr) => {
             var responseObject = $.parseJSON(xHr.responseText);
-            console.log(responseObject);
             var $newContent = $("<div></div>")
                 .load("/gamePanelSnippet.html .game-panel-container",
                     () => {
@@ -37,7 +58,6 @@
 
                         var messages = responseObject['lastPlay'];
                         for (x in messages) {
-                            console.log(messages[x]);
                             var $messageItem = $("<li></li>");
                             $messageItem.text(messages[x]);
                             $newContent.find('#game-panel-messages').append($messageItem);

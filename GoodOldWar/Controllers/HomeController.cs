@@ -25,8 +25,17 @@ namespace GoodOldWar.Controllers
             game.Link = $"{Request.Path.Value}/{game.GameId}/next";
             
             return game;
-        }      
-        
+        }
+
+        [HttpGet("/game/reload")]
+        public GameStateDTO GameReload(int id)
+        {
+            GameStateDTO game = _service.GetGame(id);
+            game.Link = $"/game/{game.GameId}/next";
+
+            return game;
+        }
+
         [HttpGet("/game/{id}")]
         public GameStateDTO Game(int id)
         {
@@ -44,25 +53,25 @@ namespace GoodOldWar.Controllers
             {
                 game.Link = $"{Request.Path.Value}";
             }
-
+            else
+            {
+                game.Link = "/";
+            }
             return game;
         }
         
         public IActionResult Index()
         {
+            List<Game> games = _service.GetNRecentGames(5);
+
+            ViewData["GameList"] = games;
+
             return View();
         }
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
+            ViewData["Message"] = "War for two players";
 
             return View();
         }
