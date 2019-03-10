@@ -21,9 +21,21 @@ namespace GoodOldWar.Controllers
         [HttpPost("/game")]
         public GameStateDTO Game(string player1name, string player2name = "CPU")
         {
-            return _service.CreateNewGame(player1name, player2name);           
+            GameStateDTO game =_service.CreateNewGame(player1name, player2name);
+            game.Link = $"{Request.Path.Value}/{game.GameId}";
+            
+            return game;
         }      
         
+        [HttpGet("/game/{id}")]
+        public GameStateDTO Game(int id)
+        {
+            GameStateDTO game = _service.GetGame(id);
+            game.Link = $"{Request.Path.Value}/next";
+
+            return game;
+        }
+
         [HttpGet("/game/{id}/next")]
         public GameStateDTO PlayNext(int id)
         {

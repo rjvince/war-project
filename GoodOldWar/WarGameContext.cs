@@ -17,6 +17,22 @@ namespace GoodOldWar
         public DbSet<Deck> Decks { get; set; }
         public DbSet<PlayingCard> PlayingCards { get; set; }
 
+        public Game GetGameEntireState(int gameId)
+        {
+            Game game =
+            Games.Include(g => g.players)
+                    .ThenInclude((Player p) => p.Deck)
+                        .ThenInclude((Deck d) => d.Cards)
+            .Single(g => g.Id == gameId);
+
+            foreach (Player player in game.players)
+            {
+                player.Deck.Cards = player.Deck.Cards.OrderBy(c => c.Sequence).ToList();
+            }
+
+            return game;
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source=wargame.db");

@@ -41,8 +41,24 @@ namespace GoodOldWar
                 GameId = game.Id,
                 GameOver = false,
                 LastPlay = new List<string>(),
-                Player1Score = player1.Deck.Count(),
-                Player2Score = player2.Deck.Count()
+                Player1 = game.players[0],
+                Player2 = game.players[1]
+            };
+
+            return dto;
+        }
+
+        public GameStateDTO GetGame(int gameId)
+        {
+            Game game = _context.GetGameEntireState(gameId);
+
+            GameStateDTO dto = new GameStateDTO
+            {
+                GameId = game.Id,
+                GameOver = false,
+                LastPlay = new List<string>(),
+                Player1 = game.players[0],
+                Player2 = game.players[1]
             };
 
             return dto;
@@ -50,42 +66,33 @@ namespace GoodOldWar
 
         public GameStateDTO PlayNextHand(int gameId)
         {
-            Game currentGame = _context.Games.Include(g => g.players).Single(g => g.Id == gameId);
-            
-            Player player1 = _context.Players.Include(p => p.Deck).Single(p => p.Id == currentGame.players[0].Id);
-            Player player2 = _context.Players.Include(p => p.Deck).Single(p => p.Id == currentGame.players[1].Id);
-
-            Deck deck1 = _context.Decks.Include(d => d.Cards).Single(d => d.Id == player1.Deck.Id);
-            Deck deck2 = _context.Decks.Include(d => d.Cards).Single(d => d.Id == player2.Deck.Id);
-
-            deck1.Cards = deck1.Cards.OrderBy(card => card.Sequence).ToList();
-            deck2.Cards = deck2.Cards.OrderBy(card => card.Sequence).ToList();
+            Game game = _context.GetGameEntireState(gameId);
 
             List<string> plays = new List<string>();
             List<PlayingCard> prize = new List<PlayingCard>();
 
-            HandResult handResult = DecideHandResult(player1, player2, prize, plays);
+            HandResult handResult = DecideHandResult(game.players[0], game.players[1], prize, plays);
 
-            while (handResult == HandResult.War && !currentGame.Over())
+            while (handResult == HandResult.War && !game.Over())
             {
-                handResult = DecideHandResult(player1, player2, prize, plays);
+                handResult = DecideHandResult(game.players[0], game.players[1], prize, plays);
             }
 
-            if(currentGame.Over())
+            if(game.Over())
             {
                 plays.Add("Game Over");
-                plays.Add($"{ (deck1.IsEmpty() ? player1.Name : player2.Name) } is out of cards.");
+                plays.Add($"{ (game.players[0].Deck.IsEmpty() ? game.players[0].Name : game.players[1].Name) } is out of cards.");
             }
 
             _context.SaveChanges();
 
             GameStateDTO dto = new GameStateDTO
             {
-                GameId = currentGame.Id,
-                GameOver = (deck1.Count() == 0 || deck2.Count() == 0),
+                GameId = game.Id,
+                GameOver = (game.players[0].Deck.Count() == 0 || game.players[1].Deck.Count() == 0),
                 LastPlay = plays,
-                Player1Score = deck1.Count(),
-                Player2Score = deck2.Count()
+                Player1 = game.players[0],
+                Player2 = game.players[1]
             };
 
             return dto;
